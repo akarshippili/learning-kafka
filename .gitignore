@@ -1,2 +1,5 @@
 .idea
 .bsp
+/project/target/
+/target/
+/project/project/
