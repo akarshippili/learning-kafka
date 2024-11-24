@@ -1,19 +1,18 @@
-import domain.Domain.{Discount, Order, OrderId, Payment, Profile, UserId}
+import domain.Domain._
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder}
 import org.apache.kafka.common.serialization.{Deserializer, Serde, Serializer}
-import org.apache.kafka.streams.{KafkaStreams, StreamsConfig}
 import org.apache.kafka.streams.kstream.{GlobalKTable, JoinWindows}
+import org.apache.kafka.streams.scala.ImplicitConversions._
 import org.apache.kafka.streams.scala.StreamsBuilder
 import org.apache.kafka.streams.scala.kstream.{KStream, KTable}
 import org.apache.kafka.streams.scala.serialization.Serdes
 import org.apache.kafka.streams.scala.serialization.Serdes._
+import org.apache.kafka.streams.{KafkaStreams, StreamsConfig}
 import topics.Topics
-import org.apache.kafka.streams.scala.ImplicitConversions._
 
-import java.lang.StackWalker.Option
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 import java.util.Properties
