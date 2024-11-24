@@ -3,11 +3,13 @@ import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder}
-import org.apache.kafka.common.serialization.{Deserializer, Serde, Serdes, Serializer}
+import org.apache.kafka.common.serialization.{Deserializer, Serde, Serializer}
 import org.apache.kafka.streams.{KafkaStreams, StreamsConfig}
 import org.apache.kafka.streams.kstream.{GlobalKTable, JoinWindows}
 import org.apache.kafka.streams.scala.StreamsBuilder
 import org.apache.kafka.streams.scala.kstream.{KStream, KTable}
+import org.apache.kafka.streams.scala.serialization.Serdes
+import org.apache.kafka.streams.scala.serialization.Serdes._
 import topics.Topics
 import org.apache.kafka.streams.scala.ImplicitConversions._
 
@@ -74,7 +76,7 @@ object Main {
 
     val process = (order: Order, payment: Payment) => if (payment.status == "PAID") scala.Option[Order](order) else scala.Option.empty[Order]
     val paidOrders = orderedStream
-      .join(paymentStream)(process, JoinWindows.ofTimeDifferenceWithNoGrace(Duration.of(5, ChronoUnit.MINUTES)))
+      .join(paymentStream)(process, JoinWindows.of(Duration.of(5, ChronoUnit.MINUTES)))
       .filter((_, mayBeOrder) => mayBeOrder.nonEmpty)
       .flatMapValues(mayBeOrder => mayBeOrder.toList)
 
@@ -84,9 +86,9 @@ object Main {
     println(description)
 
     val props: Properties = new Properties()
-    props.put(StreamsConfig.APPLICATION_ID_CONFIG, "orders-application")
+    props.put(StreamsConfig.APPLICATION_ID_CONFIG, "orders-application-final")
     props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
-    props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, new Serdes.StringSerde().getClass)
+    props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.stringSerde.getClass)
 
     val streamsApp = new KafkaStreams(topology, props)
     streamsApp.start()

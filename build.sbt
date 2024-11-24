@@ -8,8 +8,8 @@ lazy val root = (project in file("."))
   )
 
 libraryDependencies ++= Seq(
-  "org.apache.kafka" % "kafka-clients" % "3.8.0",
-  "org.apache.kafka" % "kafka-streams" % "3.8.0",
+  "org.apache.kafka" % "kafka-clients" % "2.8.0",
+  "org.apache.kafka" % "kafka-streams" % "2.8.0",
   "org.apache.kafka" %% "kafka-streams-scala" % "2.8.0")
 
 libraryDependencies ++= Seq(
@@ -17,3 +17,7 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-parser" % "0.14.10",
   "io.circe" %% "circe-generic" % "0.14.10"
 )
+
+// https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.12"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % Test
